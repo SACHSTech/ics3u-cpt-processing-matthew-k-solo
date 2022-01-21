@@ -19,6 +19,7 @@ public class Sketch extends PApplet {
    */
   public void setup() {
     background(215,255,194);
+    //setting up where the ball starts
     ballCoords[0] = width / 2;	
     ballCoords[1] = (float) (height / 1.25);
   }
@@ -48,6 +49,8 @@ public class Sketch extends PApplet {
 
     }
 
+    
+
     // blocks
 
     // hole
@@ -58,25 +61,29 @@ public class Sketch extends PApplet {
     fill(255);
     ellipse(ballCoords[0], ballCoords[1], 20, 20);
 
+    //controls where the ball goes
       ballCoords[0] -= speed[0];
       ballCoords[1] -= speed[1];
       
   }
 
-  
+  //save position when mousePressed
   public void mousePressed(){
     mouseDrag[0] = mouseX;
     mouseDrag[1] = mouseY;
   }
   
+  //make line when dragged
   public void mouseDragged(){
     line(mouseDrag[0], mouseDrag[1], mouseX, mouseY);
   }
 
+  //save position when mouse released
   public void mouseReleased(){
     mouseDrag[2] = mouseX;
     mouseDrag[3] = mouseY;
 
+      //create speed variable based on how far it was dragged / also creates the direction to go towards
     speed[0] = mouseDrag[2] - mouseDrag[0];
     speed[1] = mouseDrag[3] - mouseDrag[1];
     

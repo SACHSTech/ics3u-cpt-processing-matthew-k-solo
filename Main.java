@@ -2,7 +2,8 @@ import processing.core.PApplet;
 
 /**
  * Main class to execute sketch
- * @author 
+ * @author: John Matthew Kassapian
+ * Description: 
  *
  */
 class Main {
