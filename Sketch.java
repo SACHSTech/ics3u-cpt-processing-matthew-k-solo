@@ -2,8 +2,9 @@ import processing.core.PApplet;
 
 public class Sketch extends PApplet {
 	
-  float[] speed = new float[2];
+  float[] mouseDrag = new float[4];
   float[] ballCoords = new float[2];	
+  float[] speed = new float [2];
   /**
    * Called once at the beginning of execution, put your size all in this method
    */
@@ -26,7 +27,7 @@ public class Sketch extends PApplet {
    * Called repeatedly, anything drawn to the screen goes here
    */
   public void draw() {
-	 
+    background(215,255,194);
     //grass pattern
 
     for(int i = 0; i < width; i += (width / 5)){
@@ -57,10 +58,28 @@ public class Sketch extends PApplet {
     fill(255);
     ellipse(ballCoords[0], ballCoords[1], 20, 20);
 
+      ballCoords[0] -= speed[0];
+      ballCoords[1] -= speed[1];
+      
   }
 
-  public void mouseDragged(){
-    
+  
+  public void mousePressed(){
+    mouseDrag[0] = mouseX;
+    mouseDrag[1] = mouseY;
   }
   
+  public void mouseDragged(){
+    line(mouseDrag[0], mouseDrag[1], mouseX, mouseY);
+  }
+
+  public void mouseReleased(){
+    mouseDrag[2] = mouseX;
+    mouseDrag[3] = mouseY;
+
+    speed[0] = mouseDrag[2] - mouseDrag[0];
+    speed[1] = mouseDrag[3] - mouseDrag[1];
+    
+    stroke(0);
+  }
 }
