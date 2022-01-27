@@ -40,12 +40,6 @@ public class Sketch extends PApplet {
   boolean sandTrap = false;
   boolean waterTrap = false;
 
-  //ball faces
-  float ballFront;
-  float ballDown;
-  float ballRight;
-  float ballLeft;
-
   //balls size
   float ballSize = 20;
 
@@ -199,57 +193,59 @@ public class Sketch extends PApplet {
           line(ballCoords.x, ballCoords.y, mouseX, mouseY);
         } 
         
-        
-        //side of the ball variables for collission
-        ballFront = ballCoords.y - 10;
-        ballDown = ballCoords.y + 10;
-        ballRight = ballCoords.x + 10;
-        ballLeft =  ballCoords.x - 10;
 
         //if ball collides with walls
-          if(ballFront < 20){
+          if(ballCoords.y < 20 + 10){
             velocity.y *= -1;
           }
-          if(ballDown > 880){
+          if(ballCoords.y > 880 - 10){
             velocity.y *= -1;
           }
-          if(ballRight > 580){
+          if(ballCoords.x > 580 - 10){
             velocity.x *= -1;
           }
-          if(ballLeft < 20){
+          if(ballCoords.x < 20 + 10){
             velocity.x *= -1;
           }
 
         //if ball collides with box1
-        /*
-        if(ballFront < box1X + box1Width && ballFront > box1X){
+        if(ballCoords.y < box1Y + box1Height + 10 && ballCoords.y > box1Y - 10 && ballCoords.x > box1X && ballCoords.x < box1X + box1Width){
           velocity.y *= -1;
         }
-        if(ballDown > 899){
-          velocity.y *= -1;
-        }
-        if(ballRight > 599){
+        if(ballCoords.x > box1X - 10 && ballCoords.x < box1X + box1Width + 10 && ballCoords.y >  box1Y && ballCoords.y < box1Y + box1Height){
           velocity.x *= -1;
         }
-        if(ballLeft < 1){
-          velocity.x *= -1;
-        }
-        */
-
-        /* box1X = random(0, 200);
-  box1Y = random(100, 400);
-  box1Width = random(200, 300);
-  box1Height = random(200, 300);
-  */
-
+        
         //if ball collides with box2
+        if(ballCoords.y < box2Y + box2Height + 10 && ballCoords.y > box2Y - 10 && ballCoords.x > box2X && ballCoords.x < box2X + box2Width){
+          velocity.y *= -1;
+        }
+        if(ballCoords.x > box2X - 10 && ballCoords.x < box2X + box2Width + 10 && ballCoords.y >  box2Y && ballCoords.y < box2Y + box2Height){
+          velocity.x *= -1;
+        }
 
         //if ball collides with sand
         if(trapType == 0 && ballCoords.x > trapX - (trapWidth / 2) && ballCoords.x < trapX + (trapWidth / 2) && ballCoords.y > trapY - (trapHeight / 2) && ballCoords.y < trapY + (trapHeight / 2)){
           
-          if(velocity.x != 0 && velocity.y != 0){
-            velocity.x -= round(random(2));
-            velocity.y -= round(random(2));
+          if(velocity.x != 0 || velocity.y != 0){
+            int randomSpeedChange = round(random(30,45));
+            
+            if(velocity.x > 50){
+              ballMoving = true;
+              velocity.x -= randomSpeedChange;
+            }
+            if(velocity.y > 50){
+              ballMoving = true;
+              velocity.y -= randomSpeedChange;
+            }
+            if(velocity.x < -50){
+              ballMoving = true;
+              velocity.x += randomSpeedChange;
+            }
+            if(velocity.y < -50){
+              ballMoving = true;
+              velocity.y += randomSpeedChange;
+            }
           }
 
         }
@@ -292,18 +288,18 @@ public class Sketch extends PApplet {
             velocity.y += 1;
           }
 
+          
+
+
           if(velocity.x == 0 && velocity.y == 0){
             ballMoving = false;
           }
-
-
-        //calculate score for par
 
         //ball in hole - reset score - next level - make levelComplete = true again - add 1 to holeCount - make ballSize 20 again
         if(ballCoords.x > holeX - 20 && ballCoords.x < holeX + 20 && ballCoords.y < 50 + 20 && ballCoords.y > 50 - 20 && ballSize == 0){
           ballCoords = new PVector(300, 750);
           velocity = new PVector(0,0);
-
+          
           //calculating the par score total thing
           score += (par - count) * -1;
 
@@ -319,6 +315,7 @@ public class Sketch extends PApplet {
         
       }
       else{
+        // score screen with menu button to go back to menu
         scoreScreen = true;
         fill(0);
         textSize(75);
@@ -331,8 +328,6 @@ public class Sketch extends PApplet {
         text("Back To Menu", 155, 410);
         
       }
-
-      // score screen with menu button to go back to menu
     }
   }
 
