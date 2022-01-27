@@ -3,8 +3,7 @@ import processing.core.PApplet;
 /**
  * Main class to execute sketch
  * @author: John Matthew Kassapian
- * Description: 
- *
+ * Description: A game that simulates 2D mini golf. It has a main menu, the user gets to pick how many holes, a score, a par, and randomly generated levels.
  */
 class Main {
   public static void main(String[] args) {

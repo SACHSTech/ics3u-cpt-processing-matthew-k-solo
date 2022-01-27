@@ -369,6 +369,12 @@ public class Sketch extends PApplet {
 
   }
 
+  /*
+  * Description: when the mouse is released while a game is in progress, and the ball isn't moving, a velocity PVector will be modified based on 
+  * the distance between the golf ball and the players mouse. This allows for the player to move the ball around.
+  * @param: void (uses global variables)
+  */
+
   public void mouseReleased(){
     if(gameInProgress == true && ballMoving != true){
       velocity.x = round((mouseX - ballCoords.x) / 5);
@@ -377,13 +383,28 @@ public class Sketch extends PApplet {
     }
   }
 
+  /*
+  * Description: method that simulates a coin flip (50/50) odds
+  * @param: none. returns an integer.
+  */
+
   public int coinFlip(){
     return round(random(1));
   }
 
+  /*
+  * Description: method that choses a random whole number from 2-4 to act as the par for each hole.
+  * @param: none. returns an integer.
+  */
+
   public int randomPar(){
     return round(random(2, 4));
   }
+
+  /*
+  * Description: method that generates random values for the location of the two boxes, the sand/water trap, and the x value for the hole.
+  * @param: returns nothing needs nothing (uses global variables).
+  */
 
   public void randomizeLevel(){
   box1X = random(0, 200);
