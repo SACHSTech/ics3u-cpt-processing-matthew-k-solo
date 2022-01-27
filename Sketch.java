@@ -7,52 +7,47 @@ public class Sketch extends PApplet {
   PVector velocity;
 
   //number of levels that will be laoded in a game, if the game is in progress or should be in menu, and the score and stroke count
-  int holeCount = 0;
-  int holeLimit = 3; 
-  boolean gameInProgress = false;
-  boolean ballMoving = false;
-  boolean levelComplete = true;
-  boolean scoreScreen = false;
-  int score = 0;
-  int count = 0;
-  int par;
-  int timer = 180;
-
+  boolean isGameInProgress = false;
+  boolean isBallMoving = false;
+  boolean isLevelComplete = true;
+  boolean onScoreScreen = false;
+  int intHoleCount = 0;
+  int intHoleLimit = 3; 
+  int intScore = 0;
+  int intCount = 0;
+  int intPar;
+  int intTimer = 180;
   
   //random box, sand, and water variables.
 
-  float box1X;
-  float box1Y;
-  float box1Width;
-  float box1Height;
-  float box2X;
-  float box2Y;
-  float box2Width;
-  float box2Height;
-  float holeX;
+  float fltBox1X;
+  float fltBox1Y;
+  float fltBox1Width;
+  float fltBox1Height;
+  float fltBox2X;
+  float fltBox2Y;
+  float fltBox2Width;
+  float fltBox2Height;
 
-  float trapX;
-  float trapY;
-  float trapWidth;
-  float trapHeight;
+  float fltHoleX;
 
-  int trapType;
-  boolean sandTrap = false;
-  boolean waterTrap = false;
+  float fltTrapX;
+  float fltTrapY;
+  float fltTrapWidth;
+  float fltTrapHeight;
 
-  //balls size
-  float ballSize = 20;
+  int intTrapType;
 
-  //track every position the ball has been in
-  int indexPosition = 0;
-  float[] pastBallCoordX = new float[10];
-  float[] pastBallCoordY = new float[10];
+  boolean isSandTrap = false;
+  boolean isWaterTrap = false;
+
+  //Golf balls size
+  float fltBallSize = 20;
 
   /**
    * Called once at the beginning of execution, put your size all in this method
    */
   public void settings() {
-	// put your size call here
     size(600, 900);
   }
 
@@ -64,8 +59,6 @@ public class Sketch extends PApplet {
     background(215,255,194);
     ballCoords = new PVector(300, 750);
     velocity = new PVector(0,0);
-
-
   }
 
   /**
@@ -73,8 +66,8 @@ public class Sketch extends PApplet {
    */
   public void draw() {
     background(215,255,194);
+    
     //grass pattern
-
     for(int i = 0; i < width; i += (width / 5)){
       for(int j = 0; j < height; j += (height / 10)){
         noStroke();
@@ -93,8 +86,8 @@ public class Sketch extends PApplet {
 
     }
 
-    if(gameInProgress == false){
-      //title screen - choose holeLimit.
+    //title screen - choose holeLimit.
+    if(isGameInProgress == false){
       fill(0);
       textSize(100);
       text("Mini Golf!", 100, 100 );
@@ -116,15 +109,15 @@ public class Sketch extends PApplet {
 
 
     //game IN PROGRESS
-    if(gameInProgress == true){
-      if(holeCount < holeLimit){
+    if(isGameInProgress == true){
+      if(intHoleCount < intHoleLimit){
 
         //make level - randomize boxes
-        if(levelComplete){
+        if(isLevelComplete){
           randomizeLevel();
-          trapType = coinFlip();
-          par = randomPar();
-          levelComplete = false;
+          intTrapType = coinFlip();
+          intPar = randomPar();
+          isLevelComplete = false;
         }
         
         // border 
@@ -139,57 +132,57 @@ public class Sketch extends PApplet {
         strokeWeight(2);
         stroke(0);
         fill(100);
-        ellipse(holeX, 50, 40, 40);
+        ellipse(fltHoleX, 50, 40, 40);
         
         // sandtrap or water ( do the physics first)
         noStroke();
-        if(trapType == 0){
-          sandTrap = true;
+        if(intTrapType == 0){
+          isSandTrap = true;
           fill(234,204,167);
         }
         else{
-          waterTrap = true;
+          isWaterTrap = true;
           fill(128,213,242);
         }
-        ellipse(trapX, trapY, trapWidth, trapHeight);
+        ellipse(fltTrapX, fltTrapY, fltTrapWidth, fltTrapHeight);
 
         // blocks (make two blocks, random size, needs to have one gap twice the size of the ball to go through) w 600 h 800
         strokeWeight(2);
         stroke(0);
         fill(124,60,30);
-        rect(box1X, box1Y, box1Width, box1Height);
-        rect(box2X, box2Y, box2Width, box2Height);
+        rect(fltBox1X, fltBox1Y, fltBox1Width, fltBox1Height);
+        rect(fltBox2X, fltBox2Y, fltBox2Width, fltBox2Height);
   
         
 
         // golf ball
         fill(255);
-        ellipse(ballCoords.x, ballCoords.y, ballSize, ballSize);
+        ellipse(ballCoords.x, ballCoords.y, fltBallSize, fltBallSize);
 
 
         // show what par is
-        if(timer > 0){
+        if(intTimer > 0){
           textSize(50);
-          text("par is " + par, 220, 100);
-          timer -= 1;
+          text("par is " + intPar, 220, 100);
+          intTimer -= 1;
         }
 
         //stroke count
         fill(255);
         textSize(60);
-        text(count, 520, 50);
+        text(intCount, 520, 50);
         textSize(30);
         text("strokes", 500, 70);
 
         //total score bc of par
         textSize(60);
-        text(score, 20, 50);
+        text(intScore, 20, 50);
         textSize(30);
         text("total", 10, 70);
         
         fill(0);
         stroke(3); 
-        if(ballMoving != true && mousePressed){
+        if(isBallMoving != true && mousePressed){
           line(ballCoords.x, ballCoords.y, mouseX, mouseY);
         } 
         
@@ -209,41 +202,41 @@ public class Sketch extends PApplet {
           }
 
         //if ball collides with box1
-        if(ballCoords.y < box1Y + box1Height + 10 && ballCoords.y > box1Y - 10 && ballCoords.x > box1X && ballCoords.x < box1X + box1Width){
+        if(ballCoords.y < fltBox1Y + fltBox1Height + 10 && ballCoords.y > fltBox1Y - 10 && ballCoords.x > fltBox1X && ballCoords.x < fltBox1X + fltBox1Width){
           velocity.y *= -1;
         }
-        if(ballCoords.x > box1X - 10 && ballCoords.x < box1X + box1Width + 10 && ballCoords.y >  box1Y && ballCoords.y < box1Y + box1Height){
+        if(ballCoords.x > fltBox1X - 10 && ballCoords.x < fltBox1X + fltBox1Width + 10 && ballCoords.y >  fltBox1Y && ballCoords.y < fltBox1Y + fltBox1Height){
           velocity.x *= -1;
         }
         
         //if ball collides with box2
-        if(ballCoords.y < box2Y + box2Height + 10 && ballCoords.y > box2Y - 10 && ballCoords.x > box2X && ballCoords.x < box2X + box2Width){
+        if(ballCoords.y < fltBox2Y + fltBox2Height + 10 && ballCoords.y > fltBox2Y - 10 && ballCoords.x > fltBox2X && ballCoords.x < fltBox2X + fltBox2Width){
           velocity.y *= -1;
         }
-        if(ballCoords.x > box2X - 10 && ballCoords.x < box2X + box2Width + 10 && ballCoords.y >  box2Y && ballCoords.y < box2Y + box2Height){
+        if(ballCoords.x > fltBox2X - 10 && ballCoords.x < fltBox2X + fltBox2Width + 10 && ballCoords.y >  fltBox2Y && ballCoords.y < fltBox2Y + fltBox2Height){
           velocity.x *= -1;
         }
 
         //if ball collides with sand
-        if(trapType == 0 && ballCoords.x > trapX - (trapWidth / 2) && ballCoords.x < trapX + (trapWidth / 2) && ballCoords.y > trapY - (trapHeight / 2) && ballCoords.y < trapY + (trapHeight / 2)){
+        if(intTrapType == 0 && ballCoords.x > fltTrapX - (fltTrapWidth / 2) && ballCoords.x < fltTrapX + (fltTrapWidth / 2) && ballCoords.y > fltTrapY - (fltTrapHeight / 2) && ballCoords.y < fltTrapY + (fltTrapHeight / 2)){
           
           if(velocity.x != 0 || velocity.y != 0){
             int randomSpeedChange = round(random(30,45));
             
             if(velocity.x > 50){
-              ballMoving = true;
+              isBallMoving = true;
               velocity.x -= randomSpeedChange;
             }
             if(velocity.y > 50){
-              ballMoving = true;
+              isBallMoving = true;
               velocity.y -= randomSpeedChange;
             }
             if(velocity.x < -50){
-              ballMoving = true;
+              isBallMoving = true;
               velocity.x += randomSpeedChange;
             }
             if(velocity.y < -50){
-              ballMoving = true;
+              isBallMoving = true;
               velocity.y += randomSpeedChange;
             }
           }
@@ -252,75 +245,73 @@ public class Sketch extends PApplet {
 
         //if ball collides with water
         
-        if(trapType == 1 && ballCoords.x > trapX - (trapWidth / 2) && ballCoords.x < trapX + (trapWidth / 2) && ballCoords.y > trapY - (trapHeight / 2) && ballCoords.y < trapY + (trapHeight / 2)){
+        if(intTrapType == 1 && ballCoords.x > fltTrapX - (fltTrapWidth / 2) && ballCoords.x < fltTrapX + (fltTrapWidth / 2) && ballCoords.y > fltTrapY - (fltTrapHeight / 2) && ballCoords.y < fltTrapY + (fltTrapHeight / 2)){
           
           ballCoords = new PVector(300, 750);
           velocity.x = 0;
           velocity.y = 0;
-          count += 1;
+          intCount += 1;
         }
         
 
         //if ball collides with hole
-          if(ballCoords.x > holeX - 20 && ballCoords.x < holeX + 20 && ballCoords.y < 50 + 20 && ballCoords.y > 50 - 20 && ballSize > 0){
-            ballCoords.x = holeX;
+          if(ballCoords.x > fltHoleX - 20 && ballCoords.x < fltHoleX + 20 && ballCoords.y < 50 + 20 && ballCoords.y > 50 - 20 && fltBallSize > 0){
+            ballCoords.x = fltHoleX;
             ballCoords.y = 50;
-            ballSize -= 1;
+            fltBallSize -= 1;
           }
         
     
         //controls where the ball goes
           ballCoords.sub(velocity);
           if(velocity.x > 0){
-            ballMoving = true;
+            isBallMoving = true;
             velocity.x -= 1;
           }
           if(velocity.y > 0){
-            ballMoving = true;
+            isBallMoving = true;
             velocity.y -= 1;
           }
           if(velocity.x < 0){
-            ballMoving = true;
+            isBallMoving = true;
             velocity.x += 1;
           }
           if(velocity.y < 0){
-            ballMoving = true;
+            isBallMoving = true;
             velocity.y += 1;
           }
 
-          
-
-
+          //changes isBallMoving to false when both velocity variables = 0
           if(velocity.x == 0 && velocity.y == 0){
-            ballMoving = false;
+            isBallMoving = false;
           }
 
         //ball in hole - reset score - next level - make levelComplete = true again - add 1 to holeCount - make ballSize 20 again
-        if(ballCoords.x > holeX - 20 && ballCoords.x < holeX + 20 && ballCoords.y < 50 + 20 && ballCoords.y > 50 - 20 && ballSize == 0){
+        if(ballCoords.x > fltHoleX - 20 && ballCoords.x < fltHoleX + 20 && ballCoords.y < 50 + 20 && ballCoords.y > 50 - 20 && fltBallSize == 0){
           ballCoords = new PVector(300, 750);
           velocity = new PVector(0,0);
           
           //calculating the par score total thing
-          score += (par - count) * -1;
+          intScore += (intPar - intCount) * -1;
 
-          count = 0;
-          holeCount += 1;
-          ballSize = 20;
-          sandTrap = false;
-          waterTrap = false;
-          levelComplete = true;
-          timer = 180;
+          intCount = 0;
+          intHoleCount += 1;
+          fltBallSize = 20;
+          isSandTrap = false;
+          isWaterTrap = false;
+          isLevelComplete = true;
+          intTimer = 180;
           
         }
         
       }
       else{
         // score screen with menu button to go back to menu
-        scoreScreen = true;
+        onScoreScreen = true;
         fill(0);
         textSize(75);
         text("Game Finished!", 50, 100 );
-        text("Score " + score, 140, 175);
+        text("Score " + intScore, 140, 175);
         fill(169,208,153);
         rect(100, 350, 400, 100);
         fill(0);
@@ -331,39 +322,44 @@ public class Sketch extends PApplet {
     }
   }
 
-
+  /*
+  * Description: when the mouse is clicked. In this event there is only code for when the player is on the main menu or score screen. This is so
+  * they can select either the holeLimit when they're on the main menu, or to go back to the main menu when on the score screen
+  * @param: void (uses global variables)
+  */
   public void mouseClicked(){
-
-    if(gameInProgress != true){
+    //main menu
+    if(isGameInProgress != true){
 
       if(mouseX >= 100 && mouseX <= 500 && mouseY > 200 && mouseY < 300){
-        gameInProgress = true;
-        holeLimit = 3;
+        isGameInProgress = true;
+        intHoleLimit = 3;
       }
       if(mouseX >= 100 && mouseX <= 500 && mouseY > 350 && mouseY < 450){
-        gameInProgress = true;
-        holeLimit = 9;
+        isGameInProgress = true;
+        intHoleLimit = 9;
       }
       if(mouseX >= 100 && mouseX <= 500 && mouseY > 500 && mouseY < 600){
-        gameInProgress = true;
-        holeLimit = 18;
+        isGameInProgress = true;
+        intHoleLimit = 18;
       }
 
     }
 
-    if(scoreScreen){
+    //score screen
+    if(onScoreScreen){
       if(mouseX >= 100 && mouseX <= 500 && mouseY > 350 && mouseY < 450){
-        gameInProgress = false;
-        score = 0;
-        scoreScreen = false;
-        holeCount = 0;
+        isGameInProgress = false;
+        intScore = 0;
+        onScoreScreen = false;
+        intHoleCount = 0;
 
         ballCoords = new PVector(300, 750);
         velocity = new PVector(0,0);
-        ballSize = 20;
-        timer = 180;
-        sandTrap = false;
-        waterTrap = false;
+        fltBallSize = 20;
+        intTimer = 180;
+        isSandTrap = false;
+        isWaterTrap = false;
       }
     }
 
@@ -376,10 +372,10 @@ public class Sketch extends PApplet {
   */
 
   public void mouseReleased(){
-    if(gameInProgress == true && ballMoving != true){
+    if(isGameInProgress == true && isBallMoving != true){
       velocity.x = round((mouseX - ballCoords.x) / 5);
       velocity.y = round((mouseY - ballCoords.y) / 5);
-      count += 1;
+      intCount += 1;
     }
   }
 
@@ -407,20 +403,20 @@ public class Sketch extends PApplet {
   */
 
   public void randomizeLevel(){
-  box1X = random(0, 200);
-  box1Y = random(100, 400);
-  box1Width = random(200, 300);
-  box1Height = random(200, 300);
-  box2X = random(300, 400);
-  box2Y = random(200, 400);
-  box2Width = random(200, 300);
-  box2Height = random(200, 300);
-  holeX = random(50, 550);
+  fltBox1X = random(0, 200);
+  fltBox1Y = random(100, 400);
+  fltBox1Width = random(200, 300);
+  fltBox1Height = random(200, 300);
+  fltBox2X = random(300, 400);
+  fltBox2Y = random(200, 400);
+  fltBox2Width = random(200, 300);
+  fltBox2Height = random(200, 300);
+  fltHoleX = random(50, 550);
 
-  trapX = random(0, 400);
-  trapY = random(100, 400);
-  trapWidth = random(50, 150);
-  trapHeight = random(50, 150);
+  fltTrapX = random(0, 400);
+  fltTrapY = random(100, 400);
+  fltTrapWidth = random(50, 150);
+  fltTrapHeight = random(50, 150);
   }
 
 }
